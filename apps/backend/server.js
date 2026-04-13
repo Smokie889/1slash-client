@@ -1,47 +1,69 @@
-// Temporary backend bootstrap for local integration tests.
-// You can replace this file with your real server implementation later.
+const WebSocket = require("ws");
 
-const http = require('http');
-const { WebSocketServer } = require('ws');
+const wss = new WebSocket.Server({ port: 8080 });
 
-const PORT = Number(process.env.PORT || 8080);
+const state = {
+  players: {
+    p1: { id: "p1", x: -3, y: -1.5, facing: 1, state: "Idle" },
+    p2: { id: "p2", x: 3, y: -1.5, facing: -1, state: "Idle" },
+  },
+};
 
-const server = http.createServer((req, res) => {
-  if (req.url === '/health') {
-    res.writeHead(200, { 'Content-Type': 'application/json' });
-    res.end(JSON.stringify({ ok: true }));
-    return;
+console.log("WebSocket server running on ws://localhost:8080");
+
+wss.on("connection", (ws) => {
+  console.log("Client connected");
+
+  sendSnapshot(ws);
+
+  ws.on("message", (raw) => {
+    const text = raw.toString();
+    console.log("Received:", text);
+
+    let msg;
+    try {
+      msg = JSON.parse(text);
+    } catch (err) {
+      console.error("Invalid JSON");
+      return;
+    }
+
+    if (msg.type === "input") {
+      applyInputToP1(msg);
+      sendSnapshot(ws);
+    }
+  });
+
+  ws.on("close", () => {
+    console.log("Client disconnected");
+  });
+});
+
+function applyInputToP1(input) {
+  const p1 = state.players.p1;
+  const speed = 0.15;
+
+  p1.x += input.moveX * speed;
+
+  if (input.moveX > 0) {
+    p1.facing = 1;
+    p1.state = "Move";
+  } else if (input.moveX < 0) {
+    p1.facing = -1;
+    p1.state = "Move";
+  } else {
+    p1.state = "Idle";
   }
 
-  res.writeHead(404, { 'Content-Type': 'application/json' });
-  res.end(JSON.stringify({ error: 'Not found' }));
-});
+  const p2 = state.players.p2;
+  p2.facing = p1.x < p2.x ? -1 : 1;
+}
 
-const wss = new WebSocketServer({ server });
+function sendSnapshot(ws) {
+  const payload = {
+    type: "snapshot",
+    players: [state.players.p1, state.players.p2],
+  };
 
-wss.on('connection', (socket) => {
-  console.log('[ws] client connected');
-
-  socket.on('message', (raw) => {
-    const text = raw.toString();
-    console.log('[ws] recv:', text);
-
-    // Echo a fake snapshot so Unity client can test receiving pipeline.
-    socket.send(JSON.stringify({
-      type: 'snapshot',
-      tick: Date.now(),
-      players: [
-        { id: 'p1', x: -3, y: -1.5, facing: 1, state: 'Idle' },
-        { id: 'p2', x: 3, y: -1.5, facing: -1, state: 'Idle' }
-      ]
-    }));
-  });
-
-  socket.on('close', () => {
-    console.log('[ws] client disconnected');
-  });
-});
-
-server.listen(PORT, () => {
-  console.log(`[backend] listening on http://localhost:${PORT}`);
-});
+  ws.send(JSON.stringify(payload));
+}
