@@ -2,6 +2,7 @@
 <<<<<<< ours
 <<<<<<< ours
 <<<<<<< ours
+<<<<<<< ours
 # This .gitignore file should be placed at the root of your Unity project directory
 #
 # Get latest from https://github.com/github/gitignore/blob/main/Unity.gitignore
@@ -23,6 +24,8 @@
 >>>>>>> theirs
 =======
 >>>>>>> theirs
+=======
+>>>>>>> theirs
 # =========================
 # 1slash monorepo gitignore
 # =========================
@@ -35,6 +38,7 @@
 !.vscode/settings.json
 
 # -------------------------
+<<<<<<< ours
 # Unity (current repo root)
 # -------------------------
 [Ll]ibrary/
@@ -55,6 +59,19 @@
 =======
 >>>>>>> theirs
 =======
+>>>>>>> theirs
+=======
+# Unity project at apps/unity-client
+# -------------------------
+apps/unity-client/[Ll]ibrary/
+apps/unity-client/[Tt]emp/
+apps/unity-client/[Oo]bj/
+apps/unity-client/[Bb]uild/
+apps/unity-client/[Bb]uilds/
+apps/unity-client/[Ll]ogs/
+apps/unity-client/[Uu]ser[Ss]ettings/
+apps/unity-client/[Mm]emoryCaptures/
+apps/unity-client/[Rr]ecordings/
 >>>>>>> theirs
 
 *.log
@@ -96,6 +113,7 @@ mono_crash.*
 crashlytics-build.properties
 InitTestScene*.unity*
 
+<<<<<<< ours
 # Addressables / visual scripting generated
 ServerData/
 [Aa]ssets/StreamingAssets/aa*
@@ -119,6 +137,18 @@ apps/unity-client/[Ll]ogs/
 apps/unity-client/[Uu]ser[Ss]ettings/
 apps/unity-client/[Mm]emoryCaptures/
 apps/unity-client/[Rr]ecordings/
+=======
+# Addressables / visual scripting generated (under apps/unity-client)
+apps/unity-client/ServerData/
+apps/unity-client/[Aa]ssets/StreamingAssets/aa*
+apps/unity-client/[Aa]ssets/AddressableAssetsData/link.xml*
+apps/unity-client/[Aa]ssets/Addressables_Temp*
+apps/unity-client/[Aa]ssets/AddressableAssetsData/*/*.bin*
+apps/unity-client/[Aa]ssets/Unity.VisualScripting.Generated/VisualScripting.Flow/UnitOptions.db
+apps/unity-client/[Aa]ssets/Unity.VisualScripting.Generated/VisualScripting.Flow/UnitOptions.db.meta
+apps/unity-client/[Aa]ssets/Unity.VisualScripting.Generated/VisualScripting.Core/Property Providers
+apps/unity-client/[Aa]ssets/Unity.VisualScripting.Generated/VisualScripting.Core/Property Providers.meta
+>>>>>>> theirs
 
 # -------------------------
 # Backend / Node.js
